@@ -56,3 +56,25 @@ class Verify:
                 return "failed"
         else:
             return "failed"
+        
+def main():
+    while True:
+        email = input("Enter your email: ")
+        amount = float(input("Enter your amount: "))
+        paystack = Paystack(email, amount, os.eniron.get("secret"))
+        result = paystack.pay()
+        print("Payment initialized. Please complete the payment by visiting the following link: ")
+        print(result['auth_url'])
+        reference_id = result['reference_id']
+        print('Payment reference ID: ', reference_id)
+        
+        verify = Verify(reference_id, os.environ.get('secret'))
+        status = verify.status()
+        print('Payment status:', status)
+        
+        again = input("Do you want to amke another transaction? (yes/no): ")
+        if again.lower() != 'yes':
+            break
+        
+if __name__ =='__main__':
+    main()
